@@ -50,5 +50,43 @@ const checkout =  phoneNumber => {
     })
 } 
 
+const search = (products, searchTerm) => products.filter(product => product.title.includes(`${searchTerm}`) ||
+product.description.includes(`$searchTerm`))
+
+const loadSearch = (form, productsDivId) => {
+    const productsDiv = document.querySelector(productsDivId)
+    const inputSearch = form.querySelector('#inputSearch')
+
+    
+    form.addEventListener('submit', (e) => {
+        e.preventDefault()
+        if(inputSearch.value != ''){
+            productsDiv.querySelectorAll('.prato').forEach(prato => {
+                prato.remove()
+            })
+
+            const results = search(produtos, inputSearch.value)
+
+            results.forEach( produto => {
+
+                const html = `
+                    <article class="prato">
+                        <img   src="${produto.image}" alt="${produto.title}">
+                        <h4>${produto.title}</h4>
+                        <h4>${produto.value}</h4>
+                        <p>${produto.description}</p>
+                        <button type="button" onclick="modalTrigger(${produto.id})">Quero este prato</button>
+                    </article>
+                    `
+            
+                productsDiv.insertAdjacentHTML('beforeend', html)
+                })
+        }
+
+    })
+    
+}
+
 loadProducts(produtos, '#product-div')
 checkout('5596991002234')
+loadSearch(document.querySelector('#formSearch'), '#product-div')
